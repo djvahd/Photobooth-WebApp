@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photobooth</title>
+    <link rel="stylesheet" href="css/qr.css">
+</head>
+<body>
+    <div class="scan-container">
+        <div class="qr-container">
+            <div class="text">
+                <h1>Your Photos Are Ready!</h1>
+            </div>
+            <div class="text1">Scan the QR code below to access your digital photos</div>
+            <div id="qr-code"></div>
+            <div class="text2">Session ID</div>
+            <div class="session-id" id="session-id">hoyy</div>
+        </div>
+    </div>
+    <div class="bottom-bar">
+        <div class="countdown-start" id="countdown-start">00:30</div>
+        <div class="button-container">
+            <button id="home-button">Back to Home</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
+    <script src="js/qr.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photobooth</title>
+    <link rel="stylesheet" href="css/preview.css">
+</head>
+<body>
+    <div class="page">
+        <div class="left">
+            <div class="photo-grid">
+                <div class="item">
+                    <div class="photo"></div>
+                    <div class="button-container" data-index="0">
+                        <button class="retake-button">Retake</button>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="photo"></div>
+                    <div class="button-container" data-index="1">
+                        <button class="retake-button">Retake</button>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="photo"></div>
+                    <div class="button-container" data-index="2">
+                        <button class="retake-button">Retake</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="preview-container">
+                <div class="text">
+                    <h1>Preview</h1>
+                </div>
+                <div class="frame-container">
+                    <img id="final-preview" alt="Final Photo Strip">
+                </div>
+                <div class="countdown-start" id="countdown-start">00:30</div>
+                <div class="nextbutton-container">
+                    <button id="next-button">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/preview.js"></script>
+</body>
+</html>

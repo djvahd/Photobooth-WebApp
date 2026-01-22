@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photobooth</title>
+    <link rel="stylesheet" href="css/camera.css">
+</head>
+<body data-page="camera">
+    <div class="video">
+        <video id="video" autoplay playsinline muted></video>
+        <canvas id="capture" style="display:none"></canvas>
+    </div>
+    <div class="overlay"></div>
+    <div id="flash-overlay"></div>
+    <div class="photobooth-container">
+        <div class="ready-container">
+            <div class="text">
+                <h1>Get Ready!</h1>
+            </div>
+            <div class="text1">Session will start in <span class="countdown-start" id="countdown-start">00:30</span></div>
+            <div class="startbutton-container">
+                <button id="start-button">Start Now</button>
+            </div>
+            <div class="text2">or wait for the countdown</div>
+        </div>
+    </div>
+    <div class="capture-countdown" id="capture-countdown"></div>
+    
+    <script src="js/camera.js"></script>
+</body>
+</html>
