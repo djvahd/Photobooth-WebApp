@@ -9,7 +9,7 @@
 body {
     height: 100vh;
     width: 100%;
-    background-color: #5a8f76;
+    background-color: #06362d;
 }
 
 .page {
@@ -55,7 +55,7 @@ body {
 
 .right {
     flex: 1;
-    background: #96CDB0;
+    background: #155332;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -75,7 +75,7 @@ body {
 .text {
     font-family: 'Poppins', sans-serif;
     font-size: clamp(0.85rem, 2vw, 1.5rem);
-    color: #081b1b;
+    color: #dee2b1;
     text-align: center;
 }
 
@@ -93,19 +93,19 @@ body {
 
 .countdown-start {
     font-family: 'Poppins', sans-serif;
-    color: #081b1b;
+    color: #dee2b1;
     font-size: clamp(0.8rem, 1.2vw, 2rem);
     margin-top: 0.3px;
 }
 
 button {
     display: inline-block;
-    color: #eee8b2;
+    color: #dee2b1;
     font-family: 'Poppins', sans-serif;
     font-size: clamp(1.5rem, 2.75vw, 3rem);
     font-weight: 500;
     padding: 0.1rem 2.5rem;
-    background-color: #081b1b;
+    background-color: #d1a505;
     border: none;
     border-radius: 2rem;
     text-align: center;

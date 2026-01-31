@@ -9,7 +9,7 @@
 body {
     height: 100vh;
     width: 100%;
-    background-color: #5a8f76;
+    background-color: #06362d;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -52,7 +52,7 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: #eee8b2;
+    color: #dee2b1;
     padding: 20px;
 }
 
@@ -88,19 +88,19 @@ body {
     font-family: 'Poppins', sans-serif;
     position: absolute;
     font-size: clamp(200px, 30vw, 350px);
-    color: #eee8b2;
+    color: #dee2b1;
     padding-top: 25px;
     pointer-events: none;
 }
 
 button {
     display: inline-block;
-    color: #eee8b2;
+    color: #dee2b1;
     font-family: 'Poppins', sans-serif;
     font-size: clamp(1.5rem, 2.75vw, 3rem);
     font-weight: 500;
     padding: 0.1rem 2.5rem;
-    background-color: #081b1b;
+    background-color: #d1a505;
     border: none;
     border-radius: 2rem;
     text-align: center;

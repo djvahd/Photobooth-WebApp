@@ -143,13 +143,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const ctx = canvas.getContext("2d")
 
         const slots = [
-            {x: 112, y:512},
-            {x: 112, y:1177},
-            {x: 112, y:1837}
+            {x: 75, y:575},
+            {x: 75, y:1290},
+            {x: 75, y:2005}
         ]
 
-        const w = 856
-        const h = 569
+        const w = 930
+        const h = 619
 
         for (let i = 0; i < 3; i++) {
             const img = new Image()
