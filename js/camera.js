@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height)
 
-        return canvas.toDataURL("image/png")
+        return canvas.toDataURL("image/jpeg", 0.75)
     }
 
     function generateSessionId() {
