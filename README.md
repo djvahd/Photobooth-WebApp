@@ -99,6 +99,28 @@ Kalau *Who has access* bukan **Anyone**, website akan mendapat error **403** saa
 
 ---
 
+## Kiosk (`/kiosk/`)
+
+Alur tamu: **Mulai → pilih frame → foto (hitung mundur, otomatis) → review & ulangi → QR** → kembali ke awal.
+
+- **Pairing (sekali per perangkat):** buka `/kiosk/` → masukkan nama perangkat + kode 6 digit.
+  Sebelum halaman admin baru jadi, kode bisa dibuat dari editor Apps Script: buka **Setup.gs** →
+  pilih fungsi **buatKodePairing** → ▶ Run → lihat kodenya di *Execution log* (berlaku 10 menit).
+- **Tahan internet putus:** setiap sesi disimpan dulu di perangkat (IndexedDB), lalu diupload di
+  belakang layar. QR langsung muncul; kalau internet putus atau halaman di-refresh, upload melanjutkan sendiri.
+- **Pengaturan tersembunyi:** tekan lama 2 detik pada judul di halaman awal → status upload,
+  coba upload lagi, layar penuh, putuskan kiosk.
+- **Ubah nama acara, logo, durasi hitung mundur, dll.:** `kiosk/js/config.js`.
+- Kalau belum ada template di admin, kiosk memakai frame bawaan `kiosk/assets/frame.png`.
+- Foto **tidak di-mirror**: yang terlihat di layar sama dengan hasil foto.
+
+Disarankan membuka kiosk di Chrome mode kiosk supaya layar penuh dan tidak bisa keluar:
+```bash
+chrome --kiosk https://<situs-netlify>/kiosk/
+```
+
+---
+
 ## Deploy website (Netlify)
 
 Netlify menyajikan repo ini apa adanya (lihat `netlify.toml`), tanpa proses build.
