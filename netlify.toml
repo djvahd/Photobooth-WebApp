@@ -1,0 +1,66 @@
+# Netlify menyajikan isi repo apa adanya (tanpa build).
+[build]
+  publish = "."
+  command = ""
+
+# Halaman utama → kiosk
+[[redirects]]
+  from = "/"
+  to = "/kiosk/home.html"
+  status = 302
+
+# Alamat lama (sebelum dipindah ke /kiosk) tetap jalan
+[[redirects]]
+  from = "/home.html"
+  to = "/kiosk/home.html"
+  status = 301
+[[redirects]]
+  from = "/camera.html"
+  to = "/kiosk/camera.html"
+  status = 301
+[[redirects]]
+  from = "/preview.html"
+  to = "/kiosk/preview.html"
+  status = 301
+[[redirects]]
+  from = "/qr.html"
+  to = "/kiosk/qr.html"
+  status = 301
+
+# Admin
+[[redirects]]
+  from = "/admin"
+  to = "/admin/login.html"
+  status = 302
+
+# Jangan sajikan kode backend & file konfigurasi ke publik
+[[redirects]]
+  from = "/gas/*"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/.clasp.json"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/package.json"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/netlify.toml"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/docs/*"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/tests/*"
+  to = "/404"
+  status = 404
+  force = true

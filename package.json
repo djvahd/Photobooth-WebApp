@@ -1,0 +1,15 @@
+{
+  "name": "photobooth-webapp",
+  "private": true,
+  "description": "Photobooth kiosk + admin (Netlify) dengan backend Google Apps Script",
+  "scripts": {
+    "test": "node tests/gas.test.js",
+    "gas:login": "npx --yes @google/clasp@3.4.1 login",
+    "gas:list": "npx --yes @google/clasp@3.4.1 list-scripts",
+    "gas:pull": "npx --yes @google/clasp@3.4.1 pull",
+    "gas:push": "npx --yes @google/clasp@3.4.1 push",
+    "gas:status": "npx --yes @google/clasp@3.4.1 show-file-status",
+    "gas:deployments": "npx --yes @google/clasp@3.4.1 list-deployments",
+    "gas:open": "npx --yes @google/clasp@3.4.1 open-script"
+  }
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photobooth Gallery</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/gallery.css">
+</head>
+<body>
+    <div class="header">
+        <img src="assets/Logo - Transparent RGB.png" alt="logo">
+        <h1>Photobooth Gallery</h1>
+    </div>
+    <aside id="print-sidebar" class="expanded">
+        <button id="sidebar-button" type="button" class="sidebar-toggle">
+            <span id="print-badge" class="badge" hidden>0</span>
+            <span class="toggle-icon">☰</span>
+        </button>
+
+        <div class="sidebar-body">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Print Queue</div>
+                <div id="queue-list" class="sidebar-list"></div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">History</div>
+                <div id="history-list" class="sidebar-list"></div>
+            </div>
+        </div>
+
+        <button id="logout-btn" type="button" class="logout-btn">
+            <span class="logout-icon">⎋</span>
+            <span class="logout-text">Logout</span>
+        </button>
+    </aside>
+    <main class="app-content">
+        <div class="gallery">
+            <div class="photos"></div>
+            <div class="final"></div>
+        </div>
+    </main>
+    <div class="footer"></div>
+
+    <script type="module" src="js/sidebar.js"></script>
+    <script type="module" src="js/gallery.js"></script>
+</body>
+</html>
