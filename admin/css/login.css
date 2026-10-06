@@ -1,0 +1,35 @@
+.login-page {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #5a8f76;
+  font-family: Poppins, sans-serif;
+}
+
+.login-box {
+  background: #fff;
+  padding: 32px;
+  border-radius: 20px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin: 16px 0;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 999px;
+  border: none;
+  background: #081b1b;
+  color: #eee8b2;
+  cursor: pointer;
+}
