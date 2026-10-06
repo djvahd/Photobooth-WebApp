@@ -122,7 +122,7 @@ const services = {
 
 const ctx = vm.createContext(Object.assign({}, services))
 const gasCode = fs.readdirSync(GAS_DIR).filter(f => f.endsWith('.js')).sort().map(f => fs.readFileSync(path.join(GAS_DIR, f), 'utf8')).join('\n;\n')
-vm.runInContext(gasCode + '\n;globalThis.__gas = { doPost, doGet, setup, migrateLegacySessions }', ctx)
+vm.runInContext(gasCode + '\n;globalThis.__gas = { doPost, doGet, setup, migrateLegacySessions, buatKodePairing }', ctx)
 const gas = ctx.__gas
 
 /* ---------- helpers ---------- */
@@ -166,6 +166,9 @@ check('token kiosk tidak disimpan mentah', !JSON.stringify(ss.getSheetByName('De
 const code2 = call('createPairingCode', { adminToken: A }).data.code
 const K2 = call('pairDevice', { code: code2, name: 'Kiosk 2' }).data.deviceToken
 check('kiosk tidak bisa action admin', err(call('listSessions', { deviceToken: K })) === 'unauthorized')
+
+const editorCode = gas.buatKodePairing()
+check('buatKodePairing dari editor → kode bisa dipakai', /^\d{6}$/.test(editorCode) && call('pairDevice', { code: editorCode, name: 'Dari editor' }).ok)
 
 /* ---------- 4. template ---------- */
 const badTpl = call('saveTemplate', { adminToken: A, name: 'X', config: { width: 1000, height: 1500, slots: [{ x: 900, y: 0, w: 200, h: 100 }] } })
