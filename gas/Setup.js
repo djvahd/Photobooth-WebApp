@@ -73,6 +73,17 @@ function setup() {
   }
 }
 
+/**
+ * Buat kode pairing kiosk dari editor (tanpa halaman admin).
+ * Pilih fungsi "buatKodePairing" → ▶ Run → lihat kodenya di Execution log.
+ * Kode berlaku 10 menit dan hanya bisa dipakai sekali.
+ */
+function buatKodePairing() {
+  const result = createPairingCode_()
+  console.log(`🔑 Kode pairing kiosk: ${result.code}  (berlaku ${result.expiresIn / 60} menit)`)
+  return result.code
+}
+
 function folderFromProp_(key) {
   const id = prop_(key)
   if (!id) return null

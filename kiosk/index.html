@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#ffffff">
+  <title>Photobooth</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="css/kiosk.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <main class="kiosk">
+
+    <!-- ===== PAIRING (sekali, saat kiosk pertama dipasang) ===== -->
+    <section id="screen-pair" class="screen screen-center" hidden>
+      <form id="pair-form" class="card pair-card" novalidate>
+        <span class="eyebrow">Pengaturan awal</span>
+        <h1>Hubungkan kiosk</h1>
+        <p class="muted">Di halaman admin buka <b>Perangkat → Tambah kiosk</b>, lalu masukkan kode 6 digit yang muncul.</p>
+
+        <div class="field">
+          <label for="pair-name">Nama perangkat</label>
+          <input id="pair-name" class="input" maxlength="40" value="Kiosk 1" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="pair-code">Kode pairing</label>
+          <input id="pair-code" class="input input-code" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="••••••">
+        </div>
+
+        <p id="pair-error" class="error-text" role="alert" hidden></p>
+        <button id="pair-submit" class="btn btn-primary btn-lg" type="submit">Hubungkan</button>
+      </form>
+    </section>
+
+    <!-- ===== HALAMAN AWAL ===== -->
+    <section id="screen-home" class="screen home" hidden>
+      <div class="home-deco" aria-hidden="true"></div>
+
+      <div id="home-brand" class="home-brand">
+        <div id="brand-logo" class="brand-logo" hidden><img id="brand-logo-img" alt=""></div>
+        <h1 id="event-name" class="home-title">Photobooth</h1>
+        <p id="event-tagline" class="home-tagline"></p>
+      </div>
+
+      <button id="start-btn" class="btn btn-primary btn-xl start-btn" type="button">Mulai</button>
+      <p class="home-hint">Ketuk untuk memulai sesi foto</p>
+
+      <div class="home-status"><span id="status-chip" class="chip">Memeriksa koneksi…</span></div>
+    </section>
+
+    <!-- ===== PILIH FRAME ===== -->
+    <section id="screen-frames" class="screen" hidden>
+      <header class="screen-head">
+        <button class="btn btn-outline" type="button" data-action="home">← Kembali</button>
+        <div class="screen-title">
+          <span class="eyebrow">Langkah 1 dari 3</span>
+          <h2>Pilih frame</h2>
+        </div>
+        <span></span>
+      </header>
+      <div id="frame-grid" class="frame-grid"></div>
+      <p id="frames-error" class="error-text center" role="alert" hidden></p>
+    </section>
+
+    <!-- ===== KAMERA ===== -->
+    <section id="screen-camera" class="screen camera" hidden>
+      <header class="screen-head">
+        <span></span>
+        <div class="screen-title">
+          <span class="eyebrow">Langkah 2 dari 3</span>
+          <h2 id="shot-progress">Foto 1 dari 3</h2>
+        </div>
+        <span></span>
+      </header>
+
+      <div class="camera-stage">
+        <video id="video" autoplay playsinline muted></video>
+        <div id="countdown" class="countdown" hidden></div>
+        <div id="flash" class="flash"></div>
+        <div id="camera-error" class="camera-error" hidden>
+          <p id="camera-error-text"></p>
+          <button class="btn btn-outline" type="button" data-action="home">Kembali ke awal</button>
+        </div>
+      </div>
+
+      <div id="camera-actions" class="camera-actions">
+        <button id="shoot-btn" class="btn btn-primary btn-xl" type="button">Mulai foto</button>
+        <p class="muted">Otomatis mulai dalam <b id="auto-start">10</b> detik</p>
+      </div>
+    </section>
+
+    <!-- ===== REVIEW ===== -->
+    <section id="screen-review" class="screen review" hidden>
+      <header class="screen-head">
+        <span></span>
+        <div class="screen-title">
+          <span class="eyebrow">Langkah 3 dari 3</span>
+          <h2>Cek hasil fotomu</h2>
+        </div>
+        <span></span>
+      </header>
+
+      <div class="review-body">
+        <div>
+          <p class="muted review-help">Kurang pas? Ketuk <b>Ulangi</b> pada foto yang ingin diganti.</p>
+          <div id="review-photos" class="review-photos"></div>
+        </div>
+        <div class="review-final">
+          <img id="review-final" alt="Hasil foto dengan frame">
+        </div>
+      </div>
+
+      <div class="review-actions">
+        <button id="confirm-btn" class="btn btn-primary btn-xl" type="button">Simpan &amp; lanjut</button>
+        <p class="muted">Otomatis lanjut dalam <b id="review-timer">60</b> detik</p>
+      </div>
+    </section>
+
+    <!-- ===== SELESAI / QR ===== -->
+    <section id="screen-done" class="screen screen-center" hidden>
+      <div class="card done-card">
+        <span class="eyebrow">Selesai! 🎉</span>
+        <h1>Scan untuk ambil fotomu</h1>
+        <div id="qr" class="qr" role="img" aria-label="QR code untuk mengunduh foto"></div>
+        <p class="muted">Foto sedang diunggah. Kalau belum muncul, buka lagi link-nya beberapa saat kemudian.</p>
+        <button class="btn btn-primary btn-lg" type="button" data-action="home">Selesai</button>
+        <p class="muted small">Kembali otomatis dalam <b id="done-timer">45</b> detik</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== PENGATURAN (tekan lama 2 detik pada judul di halaman awal) ===== -->
+  <dialog id="settings" class="card settings">
+    <h2>Pengaturan kiosk</h2>
+    <dl class="settings-list">
+      <dt>Perangkat</dt><dd id="set-device">–</dd>
+      <dt>Antrean upload</dt><dd id="set-pending">–</dd>
+      <dt>Gagal upload</dt><dd id="set-failed">–</dd>
+      <dt>Status</dt><dd id="set-error">–</dd>
+    </dl>
+    <div class="settings-actions">
+      <button id="set-retry" class="btn btn-outline" type="button">Coba upload lagi</button>
+      <button id="set-fullscreen" class="btn btn-outline" type="button">Layar penuh</button>
+      <button id="set-unpair" class="btn btn-danger" type="button">Putuskan kiosk</button>
+      <button id="set-close" class="btn btn-primary" type="button">Tutup</button>
+    </div>
+  </dialog>
+</body>
+</html>

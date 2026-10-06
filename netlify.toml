@@ -6,25 +6,43 @@
 # Halaman utama → kiosk
 [[redirects]]
   from = "/"
-  to = "/kiosk/home.html"
+  to = "/kiosk/"
   status = 302
 
 # Alamat lama (sebelum dipindah ke /kiosk) tetap jalan
 [[redirects]]
   from = "/home.html"
-  to = "/kiosk/home.html"
+  to = "/kiosk/"
   status = 301
 [[redirects]]
   from = "/camera.html"
-  to = "/kiosk/camera.html"
+  to = "/kiosk/"
   status = 301
 [[redirects]]
   from = "/preview.html"
-  to = "/kiosk/preview.html"
+  to = "/kiosk/"
   status = 301
 [[redirects]]
   from = "/qr.html"
-  to = "/kiosk/qr.html"
+  to = "/kiosk/"
+  status = 301
+
+# Halaman kiosk lama (multi-halaman) → kiosk baru (satu halaman)
+[[redirects]]
+  from = "/kiosk/home.html"
+  to = "/kiosk/"
+  status = 301
+[[redirects]]
+  from = "/kiosk/camera.html"
+  to = "/kiosk/"
+  status = 301
+[[redirects]]
+  from = "/kiosk/preview.html"
+  to = "/kiosk/"
+  status = 301
+[[redirects]]
+  from = "/kiosk/qr.html"
+  to = "/kiosk/"
   status = 301
 
 # Admin
