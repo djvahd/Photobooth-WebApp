@@ -48,8 +48,20 @@
 # Admin
 [[redirects]]
   from = "/admin"
-  to = "/admin/login.html"
-  status = 302
+  to = "/admin/"
+  status = 301
+[[redirects]]
+  from = "/admin/login.html"
+  to = "/admin/"
+  status = 301
+[[redirects]]
+  from = "/admin/home.html"
+  to = "/admin/"
+  status = 301
+[[redirects]]
+  from = "/admin/gallery.html"
+  to = "/admin/"
+  status = 301
 
 # Jangan sajikan kode backend & file konfigurasi ke publik
 [[redirects]]

@@ -132,6 +132,39 @@ Dibuka dari QR di kiosk. Menampilkan foto dengan frame + foto satu per satu, mas
 
 ---
 
+## Admin (`/admin`)
+
+Login dengan password `ADMIN_PASSWORD` (Script Properties di Apps Script). Menu:
+
+| Menu | Isi |
+|---|---|
+| **Sesi foto** | Daftar & pencarian sesi, detail foto, QR/link download untuk tamu, tombol cetak |
+| **Antrean print** | Stasiun cetak, antrean, cetak ulang / batalkan / tandai selesai, riwayat |
+| **Perangkat** | Tambah kiosk (kode pairing 6 digit), status online, upload tertunda, cabut akses |
+| **Frame** | Upload PNG frame → kotak foto terdeteksi otomatis → geser/ubah ukuran → pratinjau → simpan |
+| **Pengaturan** | Cetak otomatis setiap sesi, notifikasi browser, keluar |
+
+Bar status di atas selalu menampilkan kiosk online, upload tertunda, antrean print, dan status printer.
+Masalah (kiosk offline, upload/print gagal, printer dijeda/offline) muncul sebagai **banner merah**,
+bunyi, dan notifikasi browser (aktifkan di Pengaturan).
+
+### Stasiun cetak (laptop yang tersambung ke printer)
+
+1. Buka admin di laptop printer → **Antrean print** → centang **Laptop ini tersambung ke printer**.
+2. Laptop itu akan mengambil antrean dan mencetak otomatis, satu per satu.
+3. **Printer belum tersambung?** Klik **Jeda** — foto tetap mengantre dan dicetak setelah **Lanjutkan**.
+   Job yang gagal bisa **Cetak ulang** kapan saja.
+4. Supaya tidak muncul dialog print setiap kali, buka Chrome dengan flag `--kiosk-printing`
+   (langsung mencetak ke printer default):
+   ```bash
+   chrome --kiosk-printing https://<situs-netlify>/admin/
+   ```
+
+> Browser tidak bisa membaca status fisik printer (kertas habis, kabel lepas). Indikator "printer" di admin
+> menunjukkan apakah stasiun cetak online, dijeda, atau ada job gagal.
+
+---
+
 ## Deploy website (Netlify)
 
 Netlify menyajikan repo ini apa adanya (lihat `netlify.toml`), tanpa proses build.
