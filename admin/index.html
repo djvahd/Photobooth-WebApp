@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="robots" content="noindex">
+  <title>Admin · Photobooth</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <!-- ===== LOGIN ===== -->
+  <main id="login-view" class="login" hidden>
+    <form id="login-form" class="card login-card">
+      <span class="eyebrow">Photobooth</span>
+      <h1>Masuk admin</h1>
+      <div class="field">
+        <label for="login-password">Password</label>
+        <input id="login-password" class="input" type="password" autocomplete="current-password" required>
+      </div>
+      <p id="login-error" class="error-text" role="alert" hidden></p>
+      <button id="login-submit" class="btn btn-primary btn-lg" type="submit">Masuk</button>
+    </form>
+  </main>
+
+  <!-- ===== APLIKASI ===== -->
+  <div id="app-view" class="app" hidden>
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">📸</span>
+        <span id="brand-name" class="brand-name">Photobooth</span>
+      </div>
+      <nav class="nav" aria-label="Menu admin">
+        <a href="#/sesi" data-route="sesi">Sesi foto</a>
+        <a href="#/print" data-route="print">Antrean print <span id="nav-print-count" class="nav-count" hidden></span></a>
+        <a href="#/perangkat" data-route="perangkat">Perangkat</a>
+        <a href="#/frame" data-route="frame">Frame</a>
+        <a href="#/pengaturan" data-route="pengaturan">Pengaturan</a>
+      </nav>
+    </aside>
+
+    <div class="main">
+      <!-- status & peringatan selalu terlihat di atas, walau halaman di-scroll -->
+      <div class="topbar">
+        <div id="status-bar" class="status-bar" aria-live="polite"></div>
+        <div id="alert-banner" class="alert-banner" role="alert" hidden></div>
+      </div>
+      <main id="content" class="content"></main>
+    </div>
+  </div>
+</body>
+</html>
