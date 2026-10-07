@@ -1,0 +1,20 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/", "destination": "/kiosk/", "permanent": false },
+
+    { "source": "/kiosk", "destination": "/kiosk/", "permanent": true },
+    { "source": "/admin", "destination": "/admin/", "permanent": true },
+    { "source": "/download", "destination": "/download/", "permanent": true },
+
+    { "source": "/:page(home|camera|preview|qr).html", "destination": "/kiosk/", "permanent": true },
+    { "source": "/kiosk/:page(home|camera|preview|qr).html", "destination": "/kiosk/", "permanent": true },
+    { "source": "/admin/:page(login|home|gallery).html", "destination": "/admin/", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/(admin|download)/(.*)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+# File yang TIDAK ikut di-deploy ke Vercel (backend, tes, konfigurasi, dokumentasi).
+# Padanannya di Netlify: aturan 404 di netlify.toml.
+gas/
+tests/
+docs/
+node_modules/
+package.json
+package-lock.json
+.clasp.json
+netlify.toml
+README.md
