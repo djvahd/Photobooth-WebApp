@@ -94,3 +94,18 @@
   to = "/404"
   status = 404
   force = true
+[[redirects]]
+  from = "/vercel.json"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/.vercelignore"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/README.md"
+  to = "/404"
+  status = 404
+  force = true
