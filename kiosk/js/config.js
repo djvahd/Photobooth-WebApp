@@ -1,9 +1,11 @@
-// Pengaturan kiosk. Ubah nilai di sini sesuai acara.
+// Pengaturan kiosk. Nama acara & logo diatur di shared/brand.js.
+import { BRAND } from '../../shared/brand.js'
+
 export const CONFIG = {
   // Tampilan halaman awal
-  EVENT_NAME: 'Photobooth',
-  EVENT_TAGLINE: 'Abadikan momenmu hari ini',
-  EVENT_LOGO: 'assets/logo.png',   // null = tanpa logo. Logo tampil di panel gelap.
+  EVENT_NAME: BRAND.EVENT_NAME,
+  EVENT_TAGLINE: BRAND.EVENT_TAGLINE,
+  EVENT_LOGO: BRAND.EVENT_LOGO,
 
   // Waktu (detik)
   COUNTDOWN_SECONDS: 3,            // hitung mundur sebelum tiap foto

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <title>Fotomu</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="download.css">
+  <script type="module" src="download.js"></script>
+</head>
+<body>
+  <main class="page">
+    <header class="brand">
+      <div id="brand-logo" class="brand-logo" hidden><img id="brand-logo-img" alt=""></div>
+      <p id="event-name" class="event-name">Photobooth</p>
+    </header>
+
+    <!-- memuat -->
+    <section id="state-loading" class="state card">
+      <div class="spinner" aria-hidden="true"></div>
+      <p class="muted">Memuat fotomu…</p>
+    </section>
+
+    <!-- foto belum selesai diupload -->
+    <section id="state-processing" class="state card" hidden>
+      <div class="spinner" aria-hidden="true"></div>
+      <h1>Fotomu sedang diproses</h1>
+      <p class="muted">Halaman ini akan terbuka otomatis begitu fotomu siap. Biarkan tetap terbuka ya.</p>
+      <p id="processing-detail" class="chip is-warn">Menunggu foto dari photobooth…</p>
+    </section>
+
+    <!-- terlalu lama -->
+    <section id="state-slow" class="state card" hidden>
+      <h1>Fotomu belum tersedia</h1>
+      <p class="muted">Photobooth mungkin sedang offline. Fotomu tetap tersimpan dan akan muncul di link ini begitu terkirim — coba buka lagi beberapa saat kemudian.</p>
+      <button id="slow-retry" class="btn btn-primary" type="button">Coba lagi</button>
+    </section>
+
+    <!-- link tidak valid / error -->
+    <section id="state-error" class="state card" hidden>
+      <h1 id="error-title">Link tidak valid</h1>
+      <p id="error-text" class="muted">Pastikan kamu membuka link dari QR code photobooth.</p>
+      <button id="error-retry" class="btn btn-outline" type="button" hidden>Coba lagi</button>
+    </section>
+
+    <!-- siap -->
+    <section id="state-ready" class="ready" hidden>
+      <div class="ready-head">
+        <span class="eyebrow">Fotomu sudah jadi 🎉</span>
+        <h1>Simpan kenanganmu</h1>
+        <p id="taken-at" class="muted"></p>
+      </div>
+
+      <figure class="final card">
+        <img id="final-img" alt="Foto photobooth dengan frame">
+        <a id="final-download" class="btn btn-primary btn-lg" href="#" target="_blank" rel="noopener noreferrer">⬇ Download foto</a>
+      </figure>
+
+      <p class="tip muted">Di iPhone: tekan lama pada foto → <b>Simpan ke Foto</b>.</p>
+
+      <div id="photos-section">
+        <h2 class="section-title">Foto satu per satu</h2>
+        <div id="photo-grid" class="photo-grid"></div>
+      </div>
+    </section>
+
+    <footer class="foot muted">Link ini pribadi — bagikan hanya ke orang yang kamu mau.</footer>
+  </main>
+</body>
+</html>
