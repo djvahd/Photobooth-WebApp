@@ -13,6 +13,9 @@ const newId = p => `${p}${++idSeq}`
 
 function iter(arr) { let i = 0; return { hasNext: () => i < arr.length, next: () => arr[i++] } }
 
+let copyCostMs = 0     // >0: setiap makeCopy memajukan jam tiruan sebanyak ini
+const triggers = []    // trigger waktu tiruan (ScriptApp)
+
 function makeFile(blob, parent) {
   const f = {
     id: newId('file'), name: blob.name, bytes: blob.bytes, mime: blob.mime, parent: parent.id, trashed: false, sharing: null,
@@ -20,7 +23,10 @@ function makeFile(blob, parent) {
     setSharing(a, p) { this.sharing = a + ':' + p; return this },
     setTrashed(t) { this.trashed = t; return this },
     getBlob() { const s = this; return { getBytes: () => s.bytes, getContentType: () => s.mime } },
-    makeCopy(name, folder) { return makeFile({ name, bytes: this.bytes, mime: this.mime }, folder) },
+    makeCopy(name, folder) {
+      if (copyCostMs) ctx.__clock.t += copyCostMs // simulasi penyalinan yang lambat
+      return makeFile({ name, bytes: this.bytes, mime: this.mime }, folder)
+    },
     moveTo(folder) { this.parent = folder.id; return this }
   }
   store.files.set(f.id, f)
@@ -32,6 +38,7 @@ function makeFolder(name, parent) {
     id: newId('folder'), name, parent: parent ? parent.id : null, trashed: false, created: new Date('2026-01-15T03:00:00Z'),
     getId() { return this.id }, getName() { return this.name }, getUrl() { return 'https://drive/' + this.id },
     isTrashed() { return this.trashed }, getDateCreated() { return this.created },
+    setTrashed(t) { this.trashed = t; return this },
     createFolder(n) { return makeFolder(n, this) },
     getFoldersByName(n) { return iter([...store.folders.values()].filter(x => x.parent === this.id && x.name === n && !x.trashed)) },
     getFolders() { return iter([...store.folders.values()].filter(x => x.parent === this.id && !x.trashed)) },
@@ -106,6 +113,11 @@ const services = {
     formatDate: (d) => new Date(d.getTime() + 7 * 3600e3).toISOString().slice(0, 10)
   },
   Session: { getScriptTimeZone: () => 'Asia/Jakarta' },
+  ScriptApp: {
+    newTrigger: fn => ({ timeBased: () => ({ after: ms => ({ create: () => { const t = { fn, ms, getHandlerFunction: () => fn }; triggers.push(t); return t } }) }) }),
+    getProjectTriggers: () => triggers.slice(),
+    deleteTrigger: t => { triggers.splice(triggers.indexOf(t), 1) }
+  },
   DriveApp: {
     Access: { ANYONE_WITH_LINK: 'ANYONE_WITH_LINK' }, Permission: { VIEW: 'VIEW' },
     createFolder: n => makeFolder(n, driveRoot),
@@ -122,7 +134,10 @@ const services = {
 
 const ctx = vm.createContext(Object.assign({}, services))
 const gasCode = fs.readdirSync(GAS_DIR).filter(f => f.endsWith('.js')).sort().map(f => fs.readFileSync(path.join(GAS_DIR, f), 'utf8')).join('\n;\n')
-vm.runInContext(gasCode + '\n;globalThis.__gas = { doPost, doGet, setup, migrateLegacySessions, buatKodePairing }', ctx)
+vm.runInContext(gasCode + '\n;globalThis.__gas = { doPost, doGet, setup, migrateLegacySessions, statusMigrasi, buatKodePairing }', ctx)
+// jam tiruan (hanya dipakai di tes migrasi)
+vm.runInContext('globalThis.__realNow = Date.now; globalThis.__clock = { t: 0 }', ctx)
+const useFakeClock = on => vm.runInContext(on ? 'Date.now = () => __clock.t' : 'Date.now = __realNow', ctx)
 const gas = ctx.__gas
 
 /* ---------- helpers ---------- */
@@ -269,9 +284,33 @@ const mk = (name, files) => { const f = makeFolder(name, legacy); files.forEach(
 mk('#ab12c-6-1-2026-10:00:00', ['photo2.jpg', 'photo1.jpg', 'photo3.jpg', 'final.png'])
 mk('#zz99x-7-1-2026-11:00:00', ['photo1.jpg'])
 makeFile({ name: '_printQueue.json', bytes: [1], mime: 'text/plain' }, legacy)
+
+// waktu habis di tengah sesi (tiap salinan "150 dtk", batas 240 dtk → putus di file ke-3)
+const sessionsSheet = ss.getSheetByName('Sessions')
+const rowsBefore = sessionsSheet.getLastRow()
+const foldersBefore = new Set(store.folders.keys())
+useFakeClock(true)
+copyCostMs = 150000
+const mt = gas.migrateLegacySessions()
+copyCostMs = 0
+useFakeClock(false)
+const partial = [...store.folders.values()].filter(f => !foldersBefore.has(f.id) && f.name.startsWith('legacy-'))
+check('waktu habis di tengah sesi → berhenti, belum dicatat', mt.done === false && mt.migrated === 0 && sessionsSheet.getLastRow() === rowsBefore)
+check('salinan setengah jadi dibuang', partial.length === 1 && partial[0].trashed)
+check('putaran berikutnya dijadwalkan otomatis', triggers.length === 1 && triggers[0].fn === 'migrateLegacySessions')
+
+// sisa folder dari eksekusi yang mati mendadak (mis. "Exceeded maximum execution time")
+const dayFolder = [...store.folders.values()].find(f => f.name === '2026-01-15' && !f.trashed)
+const orphan = makeFolder('legacy-sisa-crash-abc123', dayFolder)
+makeFile({ name: 'photo1.jpg', bytes: [1], mime: 'image/jpeg' }, orphan)
+
 const m1 = gas.migrateLegacySessions()
 const m2 = gas.migrateLegacySessions()
 check('migrasi 2 sesi, putaran kedua dilewati', m1.done && m1.migrated === 2 && m2.migrated === 0 && m2.skipped === 2, JSON.stringify([m1, m2]))
+check('folder sisa crash dibersihkan', orphan.trashed)
+check('jadwal otomatis dihapus setelah selesai', triggers.length === 0)
+const st2 = gas.statusMigrasi()
+check('statusMigrasi: 2 dari 2', st2.total === 2 && st2.done === 2 && st2.scheduled === false)
 const A2 = call('adminLogin', { password: 'rahasia-admin' }).data.adminToken
 const legacySessions = call('listSessions', { adminToken: A2, query: 'legacy' }).data.items
 const full = legacySessions.find(s => s.status === 'complete')
