@@ -1,0 +1,179 @@
+/* download.css — halaman tamu untuk mengambil foto (dibuka dari HP lewat QR) */
+
+body {
+  background: var(--surface);
+}
+
+.page {
+  width: min(560px, 100%);
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.muted {
+  color: var(--muted);
+  margin: 0;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--warning);
+}
+
+/* ===== brand ===== */
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  padding: 12px 18px;
+  border-radius: 16px;
+  background: var(--ink);
+}
+
+.brand-logo img {
+  display: block;
+  max-height: 64px;
+  max-width: 60vw;
+}
+
+.event-name {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.25rem;
+}
+
+/* ===== status ===== */
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.state h1 {
+  font-size: 1.5rem;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid var(--accent-tint);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== siap ===== */
+.ready {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ready-head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ready-head h1 {
+  font-size: 1.75rem;
+}
+
+.final {
+  margin: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow);
+}
+
+.final img {
+  display: block;
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 8px;
+  background: var(--surface-2);
+  min-height: 160px;
+}
+
+.final .btn {
+  width: 100%;
+  /* tetap terlihat di bawah layar saat foto strip yang tinggi di-scroll */
+  position: sticky;
+  bottom: 16px;
+  box-shadow: 0 10px 24px -8px rgba(245, 184, 0, 0.8);
+}
+
+.tip {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  margin: 8px 0 12px;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.photo-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.photo-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--surface-2);
+}
+
+.photo-card a {
+  padding: 10px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--ink);
+  text-decoration: none;
+  border-top: 1px solid var(--line);
+}
+
+.photo-card a:hover,
+.photo-card a:focus-visible {
+  background: var(--accent-tint);
+}
+
+.foot {
+  text-align: center;
+  font-size: 0.8rem;
+}

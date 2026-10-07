@@ -121,6 +121,17 @@ chrome --kiosk https://<situs-netlify>/kiosk/
 
 ---
 
+## Halaman download tamu (`/download/#t=…`)
+
+Dibuka dari QR di kiosk. Menampilkan foto dengan frame + foto satu per satu, masing-masing dengan tombol download.
+
+- Kalau foto belum selesai diupload, halaman menampilkan **"Fotomu sedang diproses"** dan mengecek ulang
+  setiap 5 detik (maks. 10 menit), lalu terbuka sendiri begitu foto siap.
+- Token ada setelah tanda `#`, jadi tidak terkirim ke server Netlify dan tidak tercatat di log.
+- Nama acara & logo (dipakai kiosk dan halaman ini): `shared/brand.js`.
+
+---
+
 ## Deploy website (Netlify)
 
 Netlify menyajikan repo ini apa adanya (lihat `netlify.toml`), tanpa proses build.
