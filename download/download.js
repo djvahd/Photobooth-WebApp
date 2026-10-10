@@ -66,8 +66,8 @@ async function load(token, startedAt) {
 }
 
 // gambar dari Drive; kalau URL thumbnail gagal, coba URL cadangan sekali
-function driveImage(img, file, size) {
-  img.src = file.view
+function driveImage(img, url, file, size) {
+  img.src = url
   img.onerror = () => {
     img.onerror = null
     img.src = `https://lh3.googleusercontent.com/d/${encodeURIComponent(file.id)}=w${size}`
@@ -75,13 +75,26 @@ function driveImage(img, file, size) {
 }
 
 function render(data) {
-  driveImage($('final-img'), data.final, 2000)
+  const finalImg = $('final-img')
+  finalImg.fetchPriority = 'high'
+  driveImage(finalImg, data.final.medium, data.final, 1080)
   $('final-download').href = data.final.download
 
   if (data.createdAt) {
     const date = new Date(data.createdAt)
     $('taken-at').textContent = 'Diambil ' + date.toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' })
   }
+
+  // foto satuan baru dimuat setelah foto final tampil, supaya tidak berebut koneksi
+  const startPhotos = []
+  let finalSettled = false
+  const releasePhotos = () => {
+    if (finalSettled) return
+    finalSettled = true
+    startPhotos.forEach(fn => fn())
+  }
+  finalImg.addEventListener('load', releasePhotos, { once: true })
+  finalImg.addEventListener('error', releasePhotos, { once: true })
 
   const grid = $('photo-grid')
   grid.replaceChildren()
@@ -92,7 +105,9 @@ function render(data) {
     const img = document.createElement('img')
     img.alt = `Foto ${i + 1}`
     img.loading = 'lazy'
-    driveImage(img, file, 1200)
+    const load = () => driveImage(img, file.thumb, file, 600)
+    if (finalSettled) load()
+    else startPhotos.push(load)
 
     const link = document.createElement('a')
     link.href = file.download

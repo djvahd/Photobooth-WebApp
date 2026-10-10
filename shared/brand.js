@@ -2,6 +2,6 @@
 export const BRAND = {
   EVENT_NAME: 'Photobooth',
   EVENT_TAGLINE: 'Abadikan momenmu hari ini',
-  // null = tanpa logo. Logo ditampilkan di panel gelap (cocok untuk logo putih/transparan).
-  EVENT_LOGO: new URL('../kiosk/assets/logo.png', import.meta.url).href
+  // null = tanpa logo. Ganti dengan file logo acaramu sendiri bila perlu.
+  EVENT_LOGO: new URL('./logo.svg', import.meta.url).href
 }

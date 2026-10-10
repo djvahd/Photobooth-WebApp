@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Photobooth">
+  <!-- logo buatan sendiri: kamera dengan lensa, di atas ubin kuning -->
+  <rect width="128" height="128" rx="30" fill="#f5b800"/>
+  <rect x="42" y="24" width="36" height="22" rx="9" fill="#1a1a1a"/>
+  <rect x="16" y="36" width="96" height="70" rx="18" fill="#1a1a1a"/>
+  <circle cx="64" cy="71" r="26" fill="#ffffff"/>
+  <circle cx="64" cy="71" r="19" fill="#1a1a1a"/>
+  <circle cx="64" cy="71" r="10" fill="#f5b800"/>
+  <circle cx="58" cy="65" r="3.5" fill="#ffffff"/>
+  <circle cx="97" cy="52" r="4.5" fill="#f5b800"/>
+</svg>

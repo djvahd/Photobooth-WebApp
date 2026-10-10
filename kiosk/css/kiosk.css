@@ -130,16 +130,14 @@ body {
 }
 
 .brand-logo {
-  padding: 20px 28px;
-  border-radius: 24px;
-  background: var(--ink);
+  border-radius: 30px;
   box-shadow: var(--shadow);
 }
 
 .brand-logo img {
   display: block;
-  max-height: 22vh;
-  max-width: 60vw;
+  width: clamp(96px, 18vh, 160px);
+  height: auto;
 }
 
 .home-title {

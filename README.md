@@ -110,7 +110,7 @@ Alur tamu: **Mulai → pilih frame → foto (hitung mundur, otomatis) → review
   belakang layar. QR langsung muncul; kalau internet putus atau halaman di-refresh, upload melanjutkan sendiri.
 - **Pengaturan tersembunyi:** tekan lama 2 detik pada judul di halaman awal → status upload,
   coba upload lagi, layar penuh, putuskan kiosk.
-- **Ubah nama acara, logo, durasi hitung mundur, dll.:** `kiosk/js/config.js`.
+- **Ubah durasi hitung mundur, kualitas foto, dll.:** `kiosk/js/config.js`. Nama acara dan logo (`shared/logo.svg`): `shared/brand.js`.
 - Kalau belum ada template di admin, kiosk memakai frame bawaan `kiosk/assets/frame.png`.
 - Foto **tidak di-mirror**: yang terlihat di layar sama dengan hasil foto.
 

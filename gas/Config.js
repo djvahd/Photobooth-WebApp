@@ -164,8 +164,10 @@ function fileUrls_(fileId) {
   if (!fileId) return null
   return {
     id: fileId,
+    small: `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`,
     thumb: `https://drive.google.com/thumbnail?id=${fileId}&sz=w600`,
-    view: `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`,
+    medium: `https://drive.google.com/thumbnail?id=${fileId}&sz=w1080`, // tampilan tamu (final berlebar 1081px)
+    view: `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`,   // resolusi penuh: dipakai untuk cetak
     download: `https://drive.google.com/uc?export=download&id=${fileId}`
   }
 }

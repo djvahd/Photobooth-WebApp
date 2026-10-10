@@ -62,8 +62,18 @@ function table_(name) {
         .map((values, i) => decode(values, i + 2))
     },
 
+    // baca satu kolom dulu, baru satu baris yang cocok (jauh lebih ringan daripada all())
     findBy(column, value) {
-      return this.all().find(obj => obj[column] === value) || null
+      const col = headers.indexOf(column)
+      const last = sheet.getLastRow()
+      if (col === -1 || last < 2) return null
+
+      const values = sheet.getRange(2, col + 1, last - 1, 1).getValues()
+      const i = values.findIndex(v => decodeValue_(column, v[0]) === value)
+      if (i === -1) return null
+
+      const rowNumber = i + 2
+      return decode(sheet.getRange(rowNumber, 1, 1, headers.length).getValues()[0], rowNumber)
     },
 
     insert(obj) {

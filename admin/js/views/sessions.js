@@ -2,6 +2,7 @@
 import { adminApi } from '../auth.js'
 import { el, fill, toast, openModal, badge, fmtDate, timeAgo, emptyState, errorState } from '../ui.js'
 import qrcode from '../../../shared/vendor/qrcode.mjs'
+import { slideshow } from '../../../shared/slideshow.js'
 
 const PAGE_SIZE = 24
 const REFRESH_MS = 20000
@@ -65,11 +66,18 @@ export function mount(root) {
     grid.replaceChildren(...items.map(card))
   }
 
+  // 2+ foto → bergantian seperti GIF; 1 foto / belum ada foto → gambar biasa
+  function thumbnail(s) {
+    if (s.previews && s.previews.length) return slideshow(s.previews)
+    if (s.thumb) return el('img', { src: s.thumb.thumb, alt: '', loading: 'lazy', referrerpolicy: 'no-referrer' })
+    return el('span', { class: 'muted', text: 'Belum ada foto' })
+  }
+
   function card(s) {
     const [label, kind] = STATUS_BADGE[s.status] || [s.status, 'neutral']
     return el('button', { class: 'session-card', type: 'button', onclick: () => openDetail(s.id) },
       el('div', { class: 'session-thumb' },
-        s.thumb ? el('img', { src: s.thumb.thumb, alt: '', loading: 'lazy', referrerpolicy: 'no-referrer' }) : el('span', { class: 'muted', text: 'Belum ada foto' })
+        thumbnail(s)
       ),
       el('div', { class: 'session-meta' },
         el('strong', { class: 'mono', text: s.id }),

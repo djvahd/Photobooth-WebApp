@@ -222,6 +222,8 @@ const fin = call('uploadFile', { deviceToken: K, sessionId: S1, kind: 'final', d
 check('upload final → complete', fin.ok && fin.data.status === 'complete')
 const dl = call('getDownload', { token: T1 }).data
 check('download complete: 3 foto + final', dl.status === 'complete' && dl.photos.length === 3 && /thumbnail\?id=/.test(dl.final.thumb))
+check('URL gambar: small w400, medium w1080, view w2000 (cetak)', /sz=w400$/.test(dl.final.small) && /sz=w1080$/.test(dl.final.medium) && /sz=w2000$/.test(dl.final.view))
+check('download complete di-cache (jawaban kedua sama)', store.cache.has('dl_' + T1) && JSON.stringify(call('getDownload', { token: T1 }).data) === JSON.stringify(dl))
 const sessFolder = store.folders.get(store.files.get(dl.final.id).parent)
 check('folder per tanggal (WIB) + nama file', store.folders.get(sessFolder.parent).name === '2026-10-06' && [...store.files.values()].filter(f => f.parent === sessFolder.id).map(f => f.name).sort().join(',') === 'final.png,photo-1.jpg,photo-2.jpg,photo-3.jpg')
 check('file di-share publik (view)', store.files.get(dl.final.id).sharing === 'ANYONE_WITH_LINK:VIEW')
@@ -231,6 +233,7 @@ check('tanggal disimpan sebagai teks', typeof ss.getSheetByName('Sessions').data
 /* ---------- 6. print ---------- */
 const S2 = 'S20261006-incomplete', T2 = tok()
 call('createSession', { deviceToken: K, sessionId: S2, downloadToken: T2, photoCount: 1 })
+check('download processing tidak di-cache', call('getDownload', { token: T2 }).data.status === 'processing' && !store.cache.has('dl_' + T2))
 check('print sesi belum selesai → not_ready', err(call('enqueuePrint', { adminToken: A, sessionId: S2 })) === 'not_ready')
 const job = call('enqueuePrint', { adminToken: A, sessionId: S1, copies: 2 })
 check('enqueuePrint', job.ok && job.data.status === 'queued' && job.data.copies === 2)
@@ -256,6 +259,7 @@ check('getSettings', call('getSettings', { adminToken: A }).data.autoPrint === t
 
 /* ---------- 8. admin list & status ---------- */
 const list = call('listSessions', { adminToken: A }).data
+check('listSessions: previews = 3 URL small untuk slideshow', list.items.find(s => s.id === S1).previews.length === 3 && list.items.find(s => s.id === S1).previews.every(u => /sz=w400$/.test(u)))
 check('listSessions + hitungan print', list.total === 3 && list.items.find(s => s.id === S1).prints.done === 1)
 check('listSessions filter query', call('listSessions', { adminToken: A, query: 'autoprint' }).data.total === 1)
 check('getSession detail', call('getSession', { adminToken: A, sessionId: S1 }).data.photos.length === 3)

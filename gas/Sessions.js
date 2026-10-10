@@ -17,6 +17,7 @@
 
 const SESSION_ID_PATTERN = /^[A-Za-z0-9-]{8,64}$/
 const DOWNLOAD_TOKEN_PATTERN = /^[A-Za-z0-9_-]{22,64}$/
+const DOWNLOAD_CACHE_TTL = 6 * 60 * 60 // detik (maks CacheService = 21600)
 
 /* =========================
    KIOSK
@@ -31,15 +32,14 @@ function createSession_(body, ctx) {
 
   return withLock_(() => {
     const sessions = table_('Sessions')
-    const all = sessions.all()
 
-    const existing = all.find(s => s.id === id)
+    const existing = sessions.findBy('id', id)
     if (existing) {
       // kiosk boleh mengirim ulang (mis. setelah koneksi putus) → tidak dibuat dua kali
       if (existing.deviceId !== ctx.deviceId) throw new AppError('conflict', 'ID sesi sudah dipakai perangkat lain')
       return sessionSummary_(existing)
     }
-    if (all.some(s => s.downloadToken === downloadToken)) {
+    if (sessions.findBy('downloadToken', downloadToken)) {
       throw new AppError('conflict', 'Token download sudah dipakai')
     }
 
@@ -125,6 +125,12 @@ function uploadFile_(body, ctx) {
 
 function getDownload_(body) {
   const token = str_(body.token, 'token', { pattern: DOWNLOAD_TOKEN_PATTERN })
+
+  // sesi yang sudah lengkap tidak berubah lagi → jawaban boleh di-cache
+  const cache = CacheService.getScriptCache()
+  const cached = cache.get('dl_' + token)
+  if (cached) return JSON.parse(cached)
+
   const row = table_('Sessions').findBy('downloadToken', token)
 
   // belum sampai server (kiosk masih offline/meng-upload)
@@ -140,12 +146,14 @@ function getDownload_(body) {
     }
   }
 
-  return {
+  const result = {
     status: 'complete',
     createdAt: row.createdAt,
     final: fileUrls_(row.finalFileId),
     photos
   }
+  cache.put('dl_' + token, JSON.stringify(result), DOWNLOAD_CACHE_TTL)
+  return result
 }
 
 /* =========================
@@ -199,6 +207,7 @@ function sessionSummary_(row, jobs) {
     downloadToken: row.downloadToken,
     final: fileUrls_(row.finalFileId),
     thumb: fileUrls_(row.finalFileId || photoIds[0]),
+    previews: photoIds.map(id => fileUrls_(id).small), // untuk thumbnail bergantian (slideshow) di admin
     legacy: !!row.legacyFolderId,
     prints: {
       queued: list.filter(j => j.status === 'queued' || j.status === 'printing').length,

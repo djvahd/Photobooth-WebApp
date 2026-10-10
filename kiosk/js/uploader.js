@@ -11,6 +11,25 @@ const RETRY_SECONDS = [5, 15, 30, 60, 120]
 // error yang tidak akan berhasil walau dicoba ulang
 const PERMANENT_ERRORS = ['invalid_input', 'forbidden', 'conflict', 'too_large']
 
+const UPLOAD_CONCURRENCY = 3
+
+// jalankan tugas dengan batas paralel; semua tugas dituntaskan dulu, error pertama baru dilempar
+async function runPool(tasks, limit) {
+  const queue = tasks.slice()
+  let firstError = null
+  const worker = async () => {
+    while (queue.length) {
+      try {
+        await queue.shift()()
+      } catch (err) {
+        if (!firstError) firstError = err
+      }
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, tasks.length) }, worker))
+  if (firstError) throw firstError
+}
+
 const listeners = new Set()
 let state = { pending: 0, failed: 0, uploading: false, lastError: null, unauthorized: false }
 let running = false
@@ -104,16 +123,24 @@ async function uploadItem(item) {
       await outbox.put(item)
     }
 
+    // final dulu (yang dilihat tamu), lalu foto satuan; beberapa file sekaligus
+    const tasks = []
+    if (!item.finalUploaded) {
+      tasks.push(async () => {
+        await kioskApi('uploadFile', { sessionId: item.sessionId, kind: 'final', data: item.final }, { timeoutMs: 120000 })
+        item.finalUploaded = true
+        await outbox.put(item)
+      })
+    }
     for (let i = 0; i < item.photos.length; i++) {
       if (item.uploaded[i]) continue
-      await kioskApi('uploadFile', { sessionId: item.sessionId, kind: 'photo', index: i, data: item.photos[i] }, { timeoutMs: 120000 })
-      item.uploaded[i] = true
-      await outbox.put(item)
+      tasks.push(async () => {
+        await kioskApi('uploadFile', { sessionId: item.sessionId, kind: 'photo', index: i, data: item.photos[i] }, { timeoutMs: 120000 })
+        item.uploaded[i] = true
+        await outbox.put(item)
+      })
     }
-
-    if (!item.finalUploaded) {
-      await kioskApi('uploadFile', { sessionId: item.sessionId, kind: 'final', data: item.final }, { timeoutMs: 120000 })
-    }
+    await runPool(tasks, UPLOAD_CONCURRENCY)
 
     await outbox.remove(item.sessionId)
   } catch (err) {
