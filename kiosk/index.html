@@ -47,7 +47,7 @@
       <button id="start-btn" class="btn btn-primary btn-xl start-btn" type="button">Mulai</button>
       <p class="home-hint">Ketuk untuk memulai sesi foto</p>
 
-      <div class="home-status"><span id="status-chip" class="chip">Memeriksa koneksi…</span></div>
+      <div class="home-status"><span id="status-chip" class="chip" hidden></span></div>
     </section>
 
     <!-- ===== PILIH FRAME ===== -->
@@ -55,11 +55,14 @@
       <header class="screen-head">
         <button class="btn btn-outline" type="button" data-action="home">← Kembali</button>
         <div class="screen-title">
-          <span class="eyebrow">Langkah 1 dari 3</span>
           <h2>Pilih frame</h2>
         </div>
         <span></span>
       </header>
+      <div id="frames-loading" class="loading" role="status" hidden>
+        <div class="spinner" aria-hidden="true"></div>
+        <p class="muted">Memuat pilihan frame…</p>
+      </div>
       <div id="frame-grid" class="frame-grid"></div>
       <p id="frames-error" class="error-text center" role="alert" hidden></p>
     </section>
@@ -69,7 +72,6 @@
       <header class="screen-head">
         <span></span>
         <div class="screen-title">
-          <span class="eyebrow">Langkah 2 dari 3</span>
           <h2 id="shot-progress">Foto 1 dari 3</h2>
         </div>
         <span></span>
@@ -85,6 +87,11 @@
         </div>
       </div>
 
+      <div id="camera-loading" class="camera-loading" role="status" hidden>
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Menyalakan kamera…</p>
+      </div>
+
       <div id="camera-actions" class="camera-actions">
         <button id="shoot-btn" class="btn btn-primary btn-xl" type="button">Mulai foto</button>
         <p class="muted">Otomatis mulai dalam <b id="auto-start">10</b> detik</p>
@@ -96,7 +103,6 @@
       <header class="screen-head">
         <span></span>
         <div class="screen-title">
-          <span class="eyebrow">Langkah 3 dari 3</span>
           <h2>Cek hasil fotomu</h2>
         </div>
         <span></span>

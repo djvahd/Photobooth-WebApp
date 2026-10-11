@@ -187,6 +187,34 @@ body {
   justify-content: center;
 }
 
+.frame-grid:empty {
+  display: none; /* daftar kosong tidak boleh memakan ruang (spinner tetap di tengah) */
+}
+
+/* ===== indikator memuat ===== */
+.loading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: 1.15rem;
+}
+
+.spinner {
+  width: 56px;
+  height: 56px;
+  border: 6px solid var(--accent-tint);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ===== pilih frame ===== */
 .frame-grid {
   flex: 1;
@@ -257,20 +285,25 @@ body {
 }
 
 /* ===== kamera ===== */
+/* kamera memenuhi seluruh layar; judul dan tombol melayang di atas video */
+.camera {
+  position: relative;
+  padding: 0;
+  gap: 0;
+}
+
 .camera-stage {
   position: relative;
   flex: 1;
   min-height: 0;
-  border-radius: 28px;
   overflow: hidden;
   background: var(--ink);
-  box-shadow: var(--shadow);
 }
 
 .camera-stage video {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   /* sengaja TIDAK di-mirror: tampilan = hasil foto */
 }
 
@@ -287,14 +320,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: min(36vh, 280px);
-  height: min(36vh, 280px);
+  width: min(48vh, 400px);
+  height: min(48vh, 400px);
   border-radius: 50%;
   background: rgba(245, 184, 0, 0.92);
   color: var(--accent-ink);
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: min(22vh, 170px);
+  font-size: min(30vh, 250px);
   animation: tick 1s ease-out;
 }
 
@@ -341,6 +374,74 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 10px;
+}
+
+/* "Foto x dari 3": teks kecil polos di kiri atas, di atas video */
+.camera .screen-head {
+  position: absolute;
+  z-index: 1; /* elemen berposisi yang muncul lebih akhir (video) akan menimpa tanpa ini */
+  top: clamp(16px, 3vh, 28px);
+  left: clamp(16px, 3vw, 32px);
+  display: block;
+  pointer-events: none;
+}
+
+/* label baru muncul setelah foto dimulai: sembunyikan selama tombol Mulai tampil (atau kamera error) */
+.camera:has(.camera-actions:not([hidden])) .screen-head,
+.camera:has(.camera-loading:not([hidden])) .screen-head,
+.camera:has(.camera-error:not([hidden])) .screen-head {
+  display: none;
+}
+
+/* kamera sedang menyala: spinner di tengah, di atas lapisan gelap yang sama dengan layar Mulai */
+.camera .camera-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  background: rgba(10, 10, 10, 0.6);
+  color: #fff;
+  font-size: clamp(1.6rem, 3.6vh, 2.6rem);
+}
+
+.camera .camera-loading p {
+  margin: 0;
+}
+
+.camera .screen-title {
+  text-align: left;
+}
+
+.camera .screen-title h2 {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.65);
+}
+
+/* tombol mulai + hitung mundur otomatis di tengah, di atas lapisan gelap.
+   Lapisan ini ikut hilang saat .camera-actions disembunyikan (pemotretan mulai). */
+.camera .camera-actions {
+  position: absolute;
+  inset: 0;
+  justify-content: center;
+  gap: 24px;
+  background: rgba(10, 10, 10, 0.6);
+}
+
+.camera .camera-actions .btn-xl {
+  height: clamp(140px, 24vh, 280px);
+  padding: 0 clamp(4rem, 10vw, 10rem);
+  font-size: clamp(2.8rem, 7.5vh, 5.5rem);
+}
+
+.camera .camera-actions .muted {
+  color: #fff;
+  font-size: clamp(1.6rem, 3.6vh, 2.6rem);
 }
 
 /* ===== review ===== */

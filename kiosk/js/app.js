@@ -122,6 +122,19 @@ function setupBranding() {
 }
 
 let templatesCache = null
+let templatesLoading = null // permintaan yang sedang berjalan, dipakai bersama
+
+function warmTemplates() {
+  templatesLoading = loadTemplates().then(list => {
+    templatesCache = list
+    preloadFrames(list)
+    return list
+  })
+  templatesLoading.catch(err => {
+    if (err.code === 'unauthorized') handleUnauthorized()
+  })
+  return templatesLoading
+}
 
 function goHome() {
   if (!getDevice()) return showPair()
@@ -130,14 +143,7 @@ function goHome() {
   show('home')
 
   // siapkan template di belakang layar supaya layar berikutnya cepat
-  loadTemplates()
-    .then(list => {
-      templatesCache = list
-      preloadFrames(list)
-    })
-    .catch(err => {
-      if (err.code === 'unauthorized') handleUnauthorized()
-    })
+  warmTemplates()
 }
 
 $('start-btn').addEventListener('click', () => {
@@ -160,13 +166,20 @@ async function openFrames() {
   after(CONFIG.IDLE_TIMEOUT_SECONDS * 1000, goHome)
 
   let list = templatesCache
-  try {
-    if (!list) list = templatesCache = await loadTemplates()
-  } catch (error) {
-    if (error.code === 'unauthorized') return handleUnauthorized()
-    err.textContent = error.message
-    err.hidden = false
-    return
+  if (!list) {
+    // belum siap: tunggu permintaan yang sudah berjalan (jangan buat yang baru) sambil memberi tahu tamu
+    $('frames-loading').hidden = false
+    try {
+      list = await (templatesLoading || warmTemplates())
+    } catch (error) {
+      $('frames-loading').hidden = true
+      if (myFlow !== flowId) return
+      if (error.code === 'unauthorized') return // sudah ditangani warmTemplates
+      err.textContent = error.message
+      err.hidden = false
+      return
+    }
+    $('frames-loading').hidden = true
   }
   if (myFlow !== flowId) return
 
@@ -234,7 +247,9 @@ async function openCamera(indices) {
 
   $('camera-error').hidden = true
   $('countdown').hidden = true
-  $('camera-actions').hidden = false
+  // selama kamera menyala hanya tampil "Menyalakan kamera…"; tombol Mulai baru muncul setelah siap
+  $('camera-actions').hidden = true
+  $('camera-loading').hidden = false
   $('shot-progress').textContent = indices.length === 1 && total > 1
     ? `Ulangi foto ${indices[0] + 1}`
     : `Foto 1 dari ${total}`
@@ -242,12 +257,14 @@ async function openCamera(indices) {
   try {
     await startCamera(video)
   } catch (err) {
+    $('camera-loading').hidden = true
     $('camera-error-text').textContent = cameraErrorMessage(err)
     $('camera-error').hidden = false
-    $('camera-actions').hidden = true
     return
   }
   if (myFlow !== flowId) return
+  $('camera-loading').hidden = true
+  $('camera-actions').hidden = false
 
   let started = false
   const begin = () => {
@@ -412,8 +429,10 @@ function randomToken() {
 ========================= */
 
 function renderStatus(state) {
+  // chip hanya muncul kalau ada masalah; kondisi normal (termasuk sedang upload) disembunyikan
   const chip = $('status-chip')
   chip.classList.remove('is-ok', 'is-warn', 'is-bad')
+  chip.hidden = false
 
   if (!navigator.onLine) {
     chip.classList.add('is-bad')
@@ -424,12 +443,8 @@ function renderStatus(state) {
   } else if (state.pending && state.lastError) {
     chip.classList.add('is-warn')
     chip.textContent = `${state.pending} sesi menunggu upload · server belum terjangkau`
-  } else if (state.pending) {
-    chip.classList.add('is-warn')
-    chip.textContent = `Mengupload ${state.pending} sesi…`
   } else {
-    chip.classList.add('is-ok')
-    chip.textContent = 'Terhubung · semua foto terupload'
+    chip.hidden = true
   }
 
   if (state.unauthorized && getDevice()) handleUnauthorized()
